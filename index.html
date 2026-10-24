@@ -413,6 +413,11 @@ body.race-mode .sc.sc-abs,
 body.race-mode .sc.sc-disp{opacity:.35}
 body.race-mode .sc.sc-abs .race-tap-row,
 body.race-mode .sc.sc-disp .race-tap-row{display:none!important}
+/* Daltonisme : un signe en plus de la couleur (✓ atteint, ! limite, ✗ insuffisant) */
+.ok .nb-val::after,.ok .nt-val::after{content:" ✓";font-size:.7em;font-weight:900;vertical-align:.15em}
+.warn .nb-val::after,.warn .nt-val::after{content:" !";font-size:.7em;font-weight:900;vertical-align:.15em}
+.bad .nb-val::after,.bad .nt-val::after{content:" ✗";font-size:.7em;font-weight:900;vertical-align:.15em}
+.ecart-n-ok::after{content:" ✓"}.ecart-n-warn::after{content:" !"}.ecart-n-bad::after{content:" ✗"}
 </style>
 
 
