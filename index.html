@@ -1345,8 +1345,9 @@ function _buildRows() {
       sp ? e.s.toUpperCase() : (cr.total !== null ? cr.total : '')];
   });
 }
+function csvq(v){v=v==null?'':String(v);if(/^-?\d+\.\d+$/.test(v))v=v.replace('.',',');return /[;"\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v} /* CSV : décimales à la française, texte libre protégé (« ; », guillemets, retours à la ligne) */
 function exportCSV() {
-  var rows = _buildRows(), csv = [HEADERS.join(';')].concat(rows.map(function(r) { return r.join(';'); }));
+  var rows = _buildRows(), csv = [HEADERS.join(';')].concat(rows.map(function(r) { return r.map(csvq).join(';'); }));
   var a = document.createElement('a'); var url = URL.createObjectURL(new Blob(['\uFEFF' + csv.join('\n')], {type:'text/csv;charset=utf-8'})); a.href = url;
   a.download = '800m_' + ((_sn || 'resultats').replace(/\s+/g, '_')) + '.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function() { URL.revokeObjectURL(url); }, 1000); toast('📥 CSV exporté');
 }
