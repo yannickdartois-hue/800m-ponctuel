@@ -1,15 +1,17 @@
 /* Hors ligne : l'appli est gardée sur l'appareil à la première ouverture avec internet,
    puis s'ouvre sans connexion. La page est rechargée depuis GitHub dès que le réseau répond (3 s max) ;
    les autres fichiers sont servis depuis l'appareil et mis à jour en arrière-plan. */
-const CACHE='800m-ponctuel-v8';
+const CACHE='800m-ponctuel-v9';
 // Toutes les applis partagent le même stockage (même adresse github.io) : on n'efface QUE les anciennes versions de CETTE appli.
 const MES_CACHES=/^(?:800m\-ponctuel\-v)\d+$/;
 
 const SHELL=['./','index.html','aide.js','eps-aide.js','polices/archivo.woff2','polices/atkinson-400.woff2','polices/atkinson-700.woff2','manifest.webmanifest','icon-32.png','icon-180.png','icon-192.png','icon-512.png'];
 const FILES=[];
+// Bibliothèques chargées depuis internet : gardées DÈS la première ouverture (sinon l'appli ne marche hors ligne qu'après une 2e ouverture avec réseau)
+const EXT=["https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"];
 const CDN=/(^|\.)(cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|unpkg\.com|cdn\.tailwindcss\.com|fonts\.googleapis\.com|fonts\.gstatic\.com)$/;
 self.addEventListener('install',e=>{e.waitUntil((async()=>{const c=await caches.open(CACHE);
-  await Promise.all(SHELL.concat(FILES).map(u=>c.add(new Request(u,{cache:'reload'})).catch(()=>{})));self.skipWaiting()})())});
+  await Promise.all(SHELL.concat(FILES).map(u=>c.add(new Request(u,{cache:'reload'})).catch(()=>{})).concat(EXT.map(u=>fetch(u,{mode:'no-cors',cache:'reload'}).then(res=>c.put(u,res)).catch(()=>{}))));self.skipWaiting()})())});
 self.addEventListener('activate',e=>{e.waitUntil((async()=>{for(const k of await caches.keys())if(MES_CACHES.test(k)&&k!==CACHE)await caches.delete(k);await self.clients.claim()})())});
 self.addEventListener('fetch',e=>{
   const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);
