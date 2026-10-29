@@ -444,6 +444,7 @@ body.race-mode .sc.sc-disp .race-tap-row{display:none!important}
   <div id="hexam-badge" class="hexam-badge bcp" onclick="openExamModal()">BAC PRO</div>
   <div class="hspace"></div>
   <button class="hbtn-race" id="race-btn" onclick="toggleRaceMode()">🏁 Course</button>
+  <button class="hbtn" onclick="EPSAide.ouvrir()" title="Mode d’emploi" aria-label="Mode d’emploi" style="font-weight:900">?</button>
   <button class="hbtn" onclick="clearAll()" title="Effacer session">🗑</button>
 </div>
 
@@ -1379,5 +1380,18 @@ function toast(msg) { var el = document.getElementById('toast'); if(!el) return;
 </script>
 
 <script>if('serviceWorker' in navigator&&location.protocol==='https:'){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+<script>
+/* Chrono qui survit au rechargement et à la mise en veille : état gardé sur l'appareil, calculé sur l'heure réelle. */
+(function(){var K='eps800m_chrono';
+var s0=save;save=function(){s0.apply(this,arguments);try{localStorage.setItem(K,JSON.stringify({run:cRunning,ct:cElapsed+(cRunning&&cStart?Date.now()-cStart:0),at:Date.now()}))}catch(e){}};
+try{var o=JSON.parse(localStorage.getItem(K)||'null');
+  if(o&&o.run&&Date.now()-o.at<4*3600e3){cElapsed=o.ct+(Date.now()-o.at);cStart=Date.now();cRunning=true;clearInterval(cTimer);cTimer=setInterval(cTick,100);renderChronoDisplay();_updateRaceBarBtns();
+    cTick();toast('⏱ Chrono repris')}}catch(e){}
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')save()});
+addEventListener('pagehide',function(){save()});
+})();
+</script>
+<script src="aide.js"></script>
+<script src="eps-aide.js"></script>
 </body>
 </html>
