@@ -520,7 +520,7 @@ body.race-mode .sc.sc-disp .race-tap-row{display:none!important}
 var PERF_PALIERS = {
   bgt: {
     F: [[289,0.5],[283,1],[277,1.5],[271,2],[265,2.5],[259,3],[253,3.5],[247,4],[241,4.5],[235,5],[231,5.5],[227,6],[224,6.5],[221,7],[218,7.5],[215,8],[212,8.5],[209,9],[206,9.5],[203,10]],
-    M: [[230,0.5],[225,1],[220,1.5],[215,2],[210,2.5],[205,3],[200,3.5],[195,4],[190,4.5],[185,5],[181,5.5],[177,6],[174,6.5],[171,7],[168,7.5],[165,8],[162,8.5],[159,9],[156,9.5],[152,10]]
+    M: [[230,0.5],[225,1],[220,1.5],[215,2],[210,2.5],[205,3],[200,3.5],[195,4],[190,4.5],[185,5],[181,5.5],[177,6],[173,6.5],[170,7],[167,7.5],[164,8],[161,8.5],[158,9],[155,9.5],[152,10]] // garçons 6,5 à 9,5 : 2'53" 2'50" 2'47" 2'44" 2'41" 2'38" 2'35" (référentiel national, annexe 2) ; corrigé le 01/11/2026, il y avait 1 s d'écart
   },
   bcp: {
     F: [[290,0.25],[286,0.5],[282,0.75],[278,1],[274,1.25],[270,1.5],[266,1.75],[262,2],[258,2.25],[254,2.5],[250,2.75],[246,3],[243,3.25],[240,3.5],[237,3.75],[234,4],[232,4.25],[230,4.5],[228,4.75],[226,5],[224,5.25],[222,5.5],[220,5.75],[218,6],[216,6.25],[214,6.5],[212,6.75],[210,7],[208,7.25],[206,7.5],[204,7.75],[203,8]],
@@ -859,7 +859,7 @@ function tap400(i) {
   if(_tap400Lock[i]) return;
   if(!cRunning && cElapsed === 0) { toast('⚠️ Chrono à 0 — utilise la saisie manuelle'); return; }
   _tap400Lock[i] = true; setTimeout(function() { delete _tap400Lock[i]; }, 1500);
-  var sec = ms2sec(cElapsed); eleves[i].t400 = sec;
+  var sec = ms2sec(cElapsed + (cRunning ? Date.now() - cStart : 0)); eleves[i].t400 = sec; // temps exact au moment de l’appui (le chrono affiché n’est mis à jour que tous les 1/10 s)
   save(); updateCard(i); updateTabDots(); _updateRaceCardBg(i); beep(660, 0.12, 0.25);
   toast('⏱ 400m ' + eleves[i].p + ' : ' + s2str(sec));
 }
@@ -867,7 +867,7 @@ function tapFinal(i) {
   if(_tapFinLock[i]) return;
   if(!cRunning && cElapsed === 0) { toast('⚠️ Chrono à 0 — utilise la saisie manuelle'); return; }
   _tapFinLock[i] = true; setTimeout(function() { delete _tapFinLock[i]; }, 1500);
-  var sec = ms2sec(cElapsed); eleves[i].tFinal = sec; eleves[i].s = 'ok';
+  var sec = ms2sec(cElapsed + (cRunning ? Date.now() - cStart : 0)); eleves[i].tFinal = sec; eleves[i].s = 'ok';
   save(); updateCard(i); updateTabDots(); _updateRaceCardBg(i); beep(880, 0.3, 0.4);
   toast('🏁 Arrivée ' + eleves[i].p + ' : ' + s2str(sec));
 }
