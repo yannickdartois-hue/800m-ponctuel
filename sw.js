@@ -1,11 +1,11 @@
 /* Hors ligne : l'appli est gardée sur l'appareil à la première ouverture avec internet,
    puis s'ouvre sans connexion. La page est rechargée depuis GitHub dès que le réseau répond (3 s max) ;
    les autres fichiers sont servis depuis l'appareil et mis à jour en arrière-plan. */
-const CACHE='800m-ponctuel-v11';
+const CACHE='800m-ponctuel-v12';
 // Toutes les applis partagent le même stockage (même adresse github.io) : on n'efface QUE les anciennes versions de CETTE appli.
 const MES_CACHES=/^(?:800m\-ponctuel\-v)\d+$/;
 
-const SHELL=['./','index.html','aide.js','eps-aide.js','polices/archivo.woff2','polices/atkinson-400.woff2','polices/atkinson-700.woff2','manifest.webmanifest','icon-32.png','icon-180.png','icon-192.png','icon-512.png'];
+const SHELL=['./','eps-maj.js','index.html','aide.js','eps-aide.js','polices/archivo.woff2','polices/atkinson-400.woff2','polices/atkinson-700.woff2','manifest.webmanifest','icon-32.png','icon-180.png','icon-192.png','icon-512.png'];
 const FILES=[];
 // Bibliothèques chargées depuis internet : gardées DÈS la première ouverture (sinon l'appli ne marche hors ligne qu'après une 2e ouverture avec réseau)
 const EXT=["https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"];
