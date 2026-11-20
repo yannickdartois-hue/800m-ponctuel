@@ -1419,5 +1419,22 @@ addEventListener('pagehide',function(){save()});
 <script src="aide.js"></script>
 <script src="eps-aide.js"></script>
 <script src="eps-maj.js"></script>
+<script>/* v1.2 · Vrai mode démo : « Données démo » ne touche plus à la session réelle.
+   Pendant la démo, rien n'est écrit dans le stockage (sauf le choix clair/sombre) ; « Quitter » recharge la vraie session. */
+var DEMO=false;
+(function(){
+  var charger=window.loadDemo, ecrire=Storage.prototype.setItem;
+  window.loadDemo=function(){
+    if(!DEMO){DEMO=true;Storage.prototype.setItem=function(k,v){if(/dark/i.test(k))return ecrire.call(this,k,v)};}
+    charger();
+  };
+  window.quitterDemo=function(){
+    /* on ne rétablit pas l'écriture : la page qui se ferme ne doit rien enregistrer de la démo */
+    location.replace(location.pathname+location.search.replace(/([?&])demo(=[^&]*)?&?/,'$1').replace(/[?&]$/,'')+location.hash);
+  };
+  if(/[?&]demo\b/.test(location.search))addEventListener('load',function(){setTimeout(window.loadDemo,300)});
+})();
+</script>
+<script src="eps-demo.js"></script>
 </body>
 </html>
